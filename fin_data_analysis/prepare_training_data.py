@@ -3,6 +3,8 @@ import csv
 from datetime import datetime
 
 DATES_FORMAT = "%Y-%m-%d"  #2018-08-24
+LOW_DECISION_VAL = -0.25
+TOP_DECISION_VAL = 0.25
 
 def normalizeDateFormat(dateToNormalize, originalFromatDescriptor):
 	objDate = datetime.strptime(dateToNormalize, originalFromatDescriptor)
@@ -42,9 +44,9 @@ def addDecisionColumnToMergedData(mergedMap):
 	for key, value in mergedMap.items():
 		labelRawValue = value[len(value) - 1]
 		print("Label : ", labelRawValue)
-		if(float(labelRawValue) < -0.3):
+		if(float(labelRawValue) < LOW_DECISION_VAL):
 			value.append("-1:No")
-		elif (float(labelRawValue) > 0.3):
+		elif (float(labelRawValue) > TOP_DECISION_VAL):
 			value.append("1:Yes")
 		else:
 			value.append("0:Risk")
@@ -71,10 +73,11 @@ def writeDataToCSV(dataMap):
 	
 
 ######### MAIN SCRIPT #########
+#Historical data downloaded from https://www.investing.com
 print("Data preparations utility")
 
 
-DJ_HIST_DATA_CSV = 'data/dj_historical_data.csv'
+DJ_HIST_DATA_CSV = 'data/dji_historical_data.csv'
 djHistoryMap = {}
 with open(DJ_HIST_DATA_CSV) as csvDataFile:
 	csvReader = csv.reader(csvDataFile)
@@ -86,7 +89,7 @@ with open(DJ_HIST_DATA_CSV) as csvDataFile:
 
 
 
-ND_HIST_DATA_CSV = 'data/nd_historical_data.csv'
+ND_HIST_DATA_CSV = 'data/nd_IXIC_historical_data.csv'
 ndHistoryMap = {}
 with open(ND_HIST_DATA_CSV) as csvDataFile:
 	csvReader = csv.reader(csvDataFile)
@@ -99,7 +102,7 @@ with open(ND_HIST_DATA_CSV) as csvDataFile:
 		
 		
 		
-SP_HIST_DATA_CSV = 'data/sp_historical_data.csv'
+SP_HIST_DATA_CSV = 'data/sp_SPX_historical_data.csv'
 spHistoryMap = {}
 with open(SP_HIST_DATA_CSV) as csvDataFile:
 	csvReader = csv.reader(csvDataFile)
@@ -111,7 +114,7 @@ with open(SP_HIST_DATA_CSV) as csvDataFile:
 
 
 
-EURUSD_HIST_DATA_CSV = 'data/eur_usd_historical_data.csv'
+EURUSD_HIST_DATA_CSV = 'data/eur_usd_fx_historical_data.csv'
 eurUsdHistoryMap = {}
 with open(EURUSD_HIST_DATA_CSV) as csvDataFile:
 	csvReader = csv.reader(csvDataFile)

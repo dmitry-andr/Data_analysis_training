@@ -84,6 +84,7 @@ scoring = 'accuracy'
 X_train, X_validation, Y_train, Y_validation = model_selection.train_test_split(X, Y, test_size=validation_size, random_state=seed)
 
 
+
 # Spot Check Algorithms
 models = []
 models.append(('LR', LogisticRegression()))
@@ -103,8 +104,40 @@ for name, model in models:
 	msg = "%s: %f (%f)" % (name, cv_results.mean(), cv_results.std())
 	print(msg)
 
+
+
+
+
+# Make predictions on validation dataset - using LR
+print("\nMake predictions using *LR* model\n")
+lr = LogisticRegression()
+lr.fit(X_train, Y_train)
+predictions = lr.predict(X_validation)
+print("Predictions")
+print(predictions)
+print("Accuracy : ", accuracy_score(Y_validation, predictions))
+print("Confusion matrix")
+print(confusion_matrix(Y_validation, predictions))
+print("Classification report")
+print(classification_report(Y_validation, predictions))
+
+
+# Make predictions on validation dataset - using LDA
+print("\nMake predictions using *LDA* model\n")
+lda = LinearDiscriminantAnalysis()
+lda.fit(X_train, Y_train)
+predictions = lda.predict(X_validation)
+print("Predictions")
+print(predictions)
+print("Accuracy : ", accuracy_score(Y_validation, predictions))
+print("Confusion matrix")
+print(confusion_matrix(Y_validation, predictions))
+print("Classification report")
+print(classification_report(Y_validation, predictions))
+
+
 # Make predictions on validation dataset - using KNN
-print("\nMake predictions using KNN model\n")
+print("\nMake predictions using *KNN* model\n")
 knn = KNeighborsClassifier()
 knn.fit(X_train, Y_train)
 predictions = knn.predict(X_validation)
@@ -117,14 +150,59 @@ print("Classification report")
 print(classification_report(Y_validation, predictions))
 
 
+# Make predictions on validation dataset - using CART
+print("\nMake predictions using *CART* model\n")
+cart = DecisionTreeClassifier()
+cart.fit(X_train, Y_train)
+predictions = cart.predict(X_validation)
+print("Predictions")
+print(predictions)
+print("Accuracy : ", accuracy_score(Y_validation, predictions))
+print("Confusion matrix")
+print(confusion_matrix(Y_validation, predictions))
+print("Classification report")
+print(classification_report(Y_validation, predictions))
 
-print("*********************************************************************\n\nMy predictions")
+
+
+# Make predictions on validation dataset - using NB
+print("\nMake predictions using *NB* model\n")
+nb = GaussianNB()
+nb.fit(X_train, Y_train)
+predictions = nb.predict(X_validation)
+print("Predictions")
+print(predictions)
+print("Accuracy : ", accuracy_score(Y_validation, predictions))
+print("Confusion matrix")
+print(confusion_matrix(Y_validation, predictions))
+print("Classification report")
+print(classification_report(Y_validation, predictions))
+
+
+
+# Make predictions on validation dataset - using SVM
+print("\nMake predictions using *SVM* model\n")
+svm = SVC()
+svm.fit(X_train, Y_train)
+predictions = svm.predict(X_validation)
+print("Predictions")
+print(predictions)
+print("Accuracy : ", accuracy_score(Y_validation, predictions))
+print("Confusion matrix")
+print(confusion_matrix(Y_validation, predictions))
+print("Classification report")
+print(classification_report(Y_validation, predictions))
+
+
+'''
+print("*********************************************************************")
+print("\nMy predictions")
 custom_input = [[4.4, 2.1, 5.5, 1.8]]
 # reshape as has only 1 entry
 predictions = knn.predict(custom_input)
 print(predictions)
 print(knn.predict_proba(custom_input))
-
+'''
 
 
 
