@@ -3,8 +3,8 @@ import csv
 from datetime import datetime
 
 DATES_FORMAT = "%Y-%m-%d"  #2018-08-24
-LOW_DECISION_VAL = -0.25
-TOP_DECISION_VAL = 0.25
+LOW_DECISION_VAL = -0.2
+TOP_DECISION_VAL = 0.2
 
 def normalizeDateFormat(dateToNormalize, originalFromatDescriptor):
 	objDate = datetime.strptime(dateToNormalize, originalFromatDescriptor)

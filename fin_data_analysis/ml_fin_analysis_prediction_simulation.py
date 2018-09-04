@@ -18,7 +18,7 @@ from sklearn.svm import SVC
 DISPLAY_PLOTS = False
 
 
-print("Starting ML classifier")
+print("*** Starting ML classifier ***")
 
 # Load dataset
 
@@ -73,11 +73,11 @@ if(DISPLAY_PLOTS):
 
 # Split-out validation dataset
 array = dataset.values
-print(array)
+#print(array)
 X = array[:,0:3]#!!!!!define Label index here  4 for Iris dataset
-print(X)
+#print(X)
 Y = array[:,3]#!!!!!define Label index here 4 for Iris dataset
-print(Y)
+#print(Y)
 validation_size = 0.20
 seed = 7
 scoring = 'accuracy'
