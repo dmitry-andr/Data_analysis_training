@@ -3,8 +3,9 @@ import csv
 from datetime import datetime
 
 DATES_FORMAT = "%Y-%m-%d"  #2018-08-24
-LOW_DECISION_VAL = -0.2
-TOP_DECISION_VAL = 0.2
+DATA_FILE_TIME_PERIOD_SUFFIX = "_jan_aug_2018"
+LOW_DECISION_VAL = 0.009
+TOP_DECISION_VAL = 0.01
 
 def normalizeDateFormat(dateToNormalize, originalFromatDescriptor):
 	objDate = datetime.strptime(dateToNormalize, originalFromatDescriptor)
@@ -43,13 +44,15 @@ def addDecisionColumnToMergedData(mergedMap):
 	mapWithDecisions = {}
 	for key, value in mergedMap.items():
 		labelRawValue = value[len(value) - 1]
-		print("Label : ", labelRawValue)
 		if(float(labelRawValue) < LOW_DECISION_VAL):
 			value.append("-1:No")
+			print("'-1:No' - Label : ", labelRawValue)
 		elif (float(labelRawValue) > TOP_DECISION_VAL):
 			value.append("1:Yes")
+			print("'1:Yes' - Label : ", labelRawValue)
 		else:
 			value.append("0:Risk")
+			print("'0:Risk' - Label : ", labelRawValue)
 		
 		mapWithDecisions[key] = value
 		
@@ -77,7 +80,7 @@ def writeDataToCSV(dataMap):
 print("Data preparations utility")
 
 
-DJ_HIST_DATA_CSV = 'data/dji_historical_data.csv'
+DJ_HIST_DATA_CSV = 'data/dji_historical_data' + DATA_FILE_TIME_PERIOD_SUFFIX + '.csv'
 djHistoryMap = {}
 with open(DJ_HIST_DATA_CSV) as csvDataFile:
 	csvReader = csv.reader(csvDataFile)
@@ -89,7 +92,7 @@ with open(DJ_HIST_DATA_CSV) as csvDataFile:
 
 
 
-ND_HIST_DATA_CSV = 'data/nd_IXIC_historical_data.csv'
+ND_HIST_DATA_CSV = 'data/nd_IXIC_historical_data' + DATA_FILE_TIME_PERIOD_SUFFIX + '.csv'
 ndHistoryMap = {}
 with open(ND_HIST_DATA_CSV) as csvDataFile:
 	csvReader = csv.reader(csvDataFile)
@@ -102,7 +105,7 @@ with open(ND_HIST_DATA_CSV) as csvDataFile:
 		
 		
 		
-SP_HIST_DATA_CSV = 'data/sp_SPX_historical_data.csv'
+SP_HIST_DATA_CSV = 'data/sp_SPX_historical_data' + DATA_FILE_TIME_PERIOD_SUFFIX + '.csv'
 spHistoryMap = {}
 with open(SP_HIST_DATA_CSV) as csvDataFile:
 	csvReader = csv.reader(csvDataFile)
@@ -112,9 +115,21 @@ with open(SP_HIST_DATA_CSV) as csvDataFile:
 		#adding key-EntryDate ; value = percentChange
 		spHistoryMap[entryDate] = reformatPercentageValue(row[6])
 
+		
+		
+GLD_FUTURES_HIST_DATA_CSV = 'data/gld_futures_historical_data' + DATA_FILE_TIME_PERIOD_SUFFIX + '.csv'
+gldFutHistoryMap = {}
+with open(GLD_FUTURES_HIST_DATA_CSV) as csvDataFile:
+	csvReader = csv.reader(csvDataFile)
+	next(csvReader, None)# skip header
+	for row in csvReader:
+		entryDate = normalizeDateFormat(row[0], '%b %d, %Y')
+		#adding key-EntryDate ; value = percentChange
+		gldFutHistoryMap[entryDate] = reformatPercentageValue(row[6])#Pay attention to index !!! different in different hist data sets
 
 
-EURUSD_HIST_DATA_CSV = 'data/eur_usd_fx_historical_data.csv'
+
+EURUSD_HIST_DATA_CSV = 'data/eur_usd_fx_historical_data' + DATA_FILE_TIME_PERIOD_SUFFIX + '.csv'
 eurUsdHistoryMap = {}
 with open(EURUSD_HIST_DATA_CSV) as csvDataFile:
 	csvReader = csv.reader(csvDataFile)
@@ -125,7 +140,7 @@ with open(EURUSD_HIST_DATA_CSV) as csvDataFile:
 		eurUsdHistoryMap[entryDate] = reformatPercentageValue(row[5])
 
 		
-mergedData = mergeMapsByKey([djHistoryMap, ndHistoryMap, spHistoryMap, eurUsdHistoryMap])
+mergedData = mergeMapsByKey([djHistoryMap, ndHistoryMap, spHistoryMap, gldFutHistoryMap, eurUsdHistoryMap])
 mergedDataWithDecisionColumn = addDecisionColumnToMergedData(mergedData)
 writeDataToCSV(mergedDataWithDecisionColumn)
 

@@ -18,7 +18,7 @@ from sklearn.svm import SVC
 DISPLAY_PLOTS = False
 
 
-print("*** Starting ML classifier ***")
+print("\n*** Starting ML classifier ***\n")
 
 # Load dataset
 
@@ -32,9 +32,9 @@ dataset = pandas.read_csv(url, names=names)
 
 #Indexes demo dataset
 url = "data/ml_data_generated/resulting_data.csv"
-names = ['date', 'dj', 'nd', 'sp', 'eur_usd', 'class']
+names = ['date', 'dj', 'nd', 'sp','gld', 'eur_usd', 'class']#['date', 'dj', 'nd', 'sp', 'class']
 #dataset = pandas.read_csv(url, names=names)
-dataset = pandas.read_csv(url, names=names, usecols=['dj', 'nd', 'sp', 'class'])
+dataset = pandas.read_csv(url, names=names, usecols=['dj', 'nd', 'sp', 'gld','class'])
 
 
 
@@ -51,6 +51,27 @@ print(dataset.describe())
 
 print("dataset class distribution")
 print(dataset.groupby('class').size())
+
+
+
+'''
+dataset['djnorm'] = dataset['dj'].apply(lambda val: round(val, 1))
+#print(dataset['djnorm'])
+dataset['dj'] = dataset['djnorm']
+del dataset['djnorm']
+dataset['ndnorm'] = dataset['nd'].apply(lambda val: round(val, 1))
+#print(dataset['ndnorm'])
+dataset['nd'] = dataset['ndnorm']
+del dataset['ndnorm']
+dataset['spnorm'] = dataset['sp'].apply(lambda val: round(val, 1))
+#print(dataset['spnorm'])
+dataset['sp'] = dataset['spnorm']
+del dataset['spnorm']
+print("dataset descriptions after normalization")
+print(dataset.describe())
+'''
+
+
 
 
 if(DISPLAY_PLOTS):
@@ -74,9 +95,9 @@ if(DISPLAY_PLOTS):
 # Split-out validation dataset
 array = dataset.values
 #print(array)
-X = array[:,0:3]#!!!!!define Label index here  4 for Iris dataset
+X = array[:,0:4]#!!!!!define Label index here
 #print(X)
-Y = array[:,3]#!!!!!define Label index here 4 for Iris dataset
+Y = array[:,4]#!!!!!define Label index here
 #print(Y)
 validation_size = 0.20
 seed = 7
