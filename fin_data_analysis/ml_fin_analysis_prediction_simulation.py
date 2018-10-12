@@ -34,7 +34,7 @@ dataset = pandas.read_csv(url, names=names)
 url = "data/ml_data_generated/resulting_data.csv"
 names = ['date', 'dj', 'nd', 'sp','gld', 'eur_usd', 'class']#['date', 'dj', 'nd', 'sp', 'class']
 #dataset = pandas.read_csv(url, names=names)
-dataset = pandas.read_csv(url, names=names, usecols=['dj', 'nd', 'sp', 'gld','class'])
+dataset = pandas.read_csv(url, names=names, usecols=['dj', 'nd', 'sp', 'gld', 'class'])#usecols=['dj', 'nd', 'sp', 'gld', 'class']
 
 
 
@@ -95,9 +95,9 @@ if(DISPLAY_PLOTS):
 # Split-out validation dataset
 array = dataset.values
 #print(array)
-X = array[:,0:4]#!!!!!define Label index here
+X = array[:,0:(len(dataset.columns) - 1)]#!!!!!define Label index here
 #print(X)
-Y = array[:,4]#!!!!!define Label index here
+Y = array[:,(len(dataset.columns) - 1)]#!!!!!define Label index here
 #print(Y)
 validation_size = 0.20
 seed = 7

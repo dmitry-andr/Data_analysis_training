@@ -3,9 +3,9 @@ import csv
 from datetime import datetime
 
 DATES_FORMAT = "%Y-%m-%d"  #2018-08-24
-DATA_FILE_TIME_PERIOD_SUFFIX = "_jan_aug_2018"
-LOW_DECISION_VAL = 0.009
-TOP_DECISION_VAL = 0.01
+DATA_FILE_TIME_PERIOD_SUFFIX = "_jan_aug_2018"#"_jan_2017_aug_2018"
+LOW_DECISION_VAL = 0.0098
+TOP_DECISION_VAL = 0.0099
 
 def normalizeDateFormat(dateToNormalize, originalFromatDescriptor):
 	objDate = datetime.strptime(dateToNormalize, originalFromatDescriptor)
