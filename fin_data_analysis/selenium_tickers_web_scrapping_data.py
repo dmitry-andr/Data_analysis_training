@@ -1,5 +1,9 @@
 import time
 import xlsxwriter
+import utils
+
+from datetime import datetime
+
 
 from selenium import webdriver
 from selenium.webdriver.common.keys import Keys
@@ -26,7 +30,9 @@ columnsOrderList = [TABLE_COLUMN_NO,
                     TICKER_DATA_KEY_TICKER_NAME,
                     TICKER_DATA_KEY_RECORD_DATE,
                     TICKER_DATA_KEY_RECORD_TIME,
-                    TICKER_DATA_KEY_ABS_VALUE]
+                    TICKER_DATA_KEY_ABS_VALUE,
+                    TICKER_DATA_KEY_CHANGE_VALUE,
+                    TICKER_DATA_KEY_CHANGE_PERCENT]
 
 
 
@@ -87,12 +93,6 @@ def extractAppAdditionalInfo(browser):
     return appInfoList
 
 
-def extract5StarsRatingsCountFromPage(browser):
-    star5Element = browser.find_element_by_xpath("//*[@id='body-content']/div/div/div[1]/div[2]/div[2]/div[1]/div[2]/div[2]/div[1]/span[3]")
-    numOf5stars = str(star5Element.get_attribute('innerHTML'))
-    numOf5stars = numOf5stars.replace("&nbsp;", " ")
-    return numOf5stars
-
 
 
 def extractAppRankningScoreFromPage(browser):    
@@ -108,23 +108,51 @@ def extractTickerValueFromPage(browser):
         return value
     else:
         return MSG_ELEMENT_NOT_FOUND
+
+
+def extractTickerValueChangeFromPage(browser):
+    selector = "span.arial_20"
+    if(check_exists_by_css_selector(browser, selector)):
+        valueChangeElement = browser.find_element_by_css_selector(selector)
+        valueChange = str(valueChangeElement.get_attribute('innerHTML'))
+        return valueChange
+    else:
+        return MSG_ELEMENT_NOT_FOUND
     
+def extractTickerValueChangePercentFromPage(browser):
+    selector = "span.arial_20.parentheses"
+    if(check_exists_by_css_selector(browser, selector)):
+        valueChangePercentElement = browser.find_element_by_css_selector(selector)
+        valueChangePercent = str(valueChangePercentElement.get_attribute('innerHTML'))
+        return valueChangePercent
+    else:
+        return MSG_ELEMENT_NOT_FOUND
 
 
 
 
-
-def extractTickerData(browser, tickerName):
-    
+def extractTickerData(browser, tickerName, scrapDate, scrapTime):
  
     
     tickerDataRecord = {
         TICKER_DATA_KEY_TICKER_NAME : tickerName
     }
+
+    tickerDataRecord[TICKER_DATA_KEY_RECORD_DATE] = scrapDate
+    tickerDataRecord[TICKER_DATA_KEY_RECORD_TIME] = scrapTime
+
+
     tickerVal = extractTickerValueFromPage(browser)
     tickerDataRecord[TICKER_DATA_KEY_ABS_VALUE] = tickerVal
     print("TICKER_DATA_KEY_ABS_VALUE : ", tickerVal)
-    
+
+    tickerValChange = extractTickerValueChangeFromPage(browser)
+    tickerDataRecord[TICKER_DATA_KEY_CHANGE_VALUE] = tickerValChange
+    print("TICKER_DATA_KEY_CHANGE_VALUE : ", tickerValChange)
+
+    tickerValChangePercent = extractTickerValueChangePercentFromPage(browser)
+    tickerDataRecord[TICKER_DATA_KEY_CHANGE_PERCENT] = tickerValChangePercent
+    print("TICKER_DATA_KEY_CHANGE_PERCENT : ", tickerValChangePercent)
     
     
 
@@ -133,14 +161,43 @@ def extractTickerData(browser, tickerName):
 
 
 # MAIN PROGRAM
-print("Starting Selenium script to grap ticker data from web page")
+print("Starting Selenium script to grab ticker data from web page")
 options = webdriver.ChromeOptions()
 options.add_argument("--lang=en")
-browser = webdriver.Chrome("C:\development_softw\chromedriver_win32\chromedriver.exe", chrome_options=options)
+
+browser_dji = webdriver.Chrome("C:\development_softw\chromedriver_win32\chromedriver.exe", chrome_options=options)
+browser_nd = webdriver.Chrome("C:\development_softw\chromedriver_win32\chromedriver.exe", chrome_options=options)
+browser_sp = webdriver.Chrome("C:\development_softw\chromedriver_win32\chromedriver.exe", chrome_options=options)
 # Make request - load page
-browser.get(BASE_URL)
+browser_dji.get("https://www.investing.com/indices/us-30")
+browser_nd.get("https://www.investing.com/indices/nasdaq-composite")
+browser_sp.get("https://www.investing.com/indices/us-spx-500")
+
 time.sleep(6)
-extractTickerData(browser, "urd")
+
+
+counter = 0
+while (counter < 2):
+        print('Iteration >>>> ', str(counter + 1))
+
+        currentDateTime = datetime.now()
+        currentDate = currentDateTime.strftime(utils.DATES_FORMAT)
+        currentTime = currentDateTime.strftime('%H:%M:%S')
+        print("Scrapping on : ", currentDate, currentTime)
+
+        djiData = extractTickerData(browser_dji, "dji", currentDate, currentTime)
+        ndData = extractTickerData(browser_nd, "nd", currentDate, currentTime)
+        spData = extractTickerData(browser_sp, "sp", currentDate, currentTime)
+
+        print("dji : ", djiData)
+        print("ndData : ", ndData)
+        print("spData : ", spData)
+
+
+        counter += 1
+        time.sleep(5)
+
+
 
 
 '''
@@ -149,6 +206,9 @@ print(check_exists_by_css_selector(browser, "span#last_last"))
 '''
 
 
-time.sleep(1)
+
+
+browser_dji.close()
+browser_nd.close()
+browser_sp.close()
 print("Selenium script - FINISHED")
-browser.close()

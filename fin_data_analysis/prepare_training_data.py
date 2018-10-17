@@ -1,16 +1,14 @@
 #import modules
 import csv
-from datetime import datetime
+import utils
 
-DATES_FORMAT = "%Y-%m-%d"  #2018-08-24
+
+
 DATA_FILE_TIME_PERIOD_SUFFIX = "_jan_aug_2018"#"_jan_2017_aug_2018"
 LOW_DECISION_VAL = 0.0098
 TOP_DECISION_VAL = 0.0099
 
-def normalizeDateFormat(dateToNormalize, originalFromatDescriptor):
-	objDate = datetime.strptime(dateToNormalize, originalFromatDescriptor)
-	normalizedDate = objDate.strftime(DATES_FORMAT)
-	return normalizedDate
+
 
 def reformatPercentageValue(percentageValue):
 	formattedValue = percentageValue.replace("%","")
@@ -86,7 +84,7 @@ with open(DJ_HIST_DATA_CSV) as csvDataFile:
 	csvReader = csv.reader(csvDataFile)
 	next(csvReader, None)# skip header
 	for row in csvReader:
-		entryDate = normalizeDateFormat(row[0], '%b %d, %Y')
+		entryDate = utils.normalizeDateFormat(row[0], '%b %d, %Y')
 		#adding key-EntryDate ; value = percentChange
 		djHistoryMap[entryDate] = reformatPercentageValue(row[6])
 
@@ -98,7 +96,7 @@ with open(ND_HIST_DATA_CSV) as csvDataFile:
 	csvReader = csv.reader(csvDataFile)
 	next(csvReader, None)# skip header
 	for row in csvReader:
-		entryDate = normalizeDateFormat(row[0], '%b %d, %Y')
+		entryDate = utils.normalizeDateFormat(row[0], '%b %d, %Y')
 		#adding key-EntryDate ; value = percentChange
 		ndHistoryMap[entryDate] = reformatPercentageValue(row[6])
 
@@ -111,7 +109,7 @@ with open(SP_HIST_DATA_CSV) as csvDataFile:
 	csvReader = csv.reader(csvDataFile)
 	next(csvReader, None)# skip header
 	for row in csvReader:
-		entryDate = normalizeDateFormat(row[0], '%b %d, %Y')
+		entryDate = utils.normalizeDateFormat(row[0], '%b %d, %Y')
 		#adding key-EntryDate ; value = percentChange
 		spHistoryMap[entryDate] = reformatPercentageValue(row[6])
 
@@ -123,7 +121,7 @@ with open(GLD_FUTURES_HIST_DATA_CSV) as csvDataFile:
 	csvReader = csv.reader(csvDataFile)
 	next(csvReader, None)# skip header
 	for row in csvReader:
-		entryDate = normalizeDateFormat(row[0], '%b %d, %Y')
+		entryDate = utils.normalizeDateFormat(row[0], '%b %d, %Y')
 		#adding key-EntryDate ; value = percentChange
 		gldFutHistoryMap[entryDate] = reformatPercentageValue(row[6])#Pay attention to index !!! different in different hist data sets
 
@@ -135,7 +133,7 @@ with open(EURUSD_HIST_DATA_CSV) as csvDataFile:
 	csvReader = csv.reader(csvDataFile)
 	next(csvReader, None)# skip header
 	for row in csvReader:
-		entryDate = normalizeDateFormat(row[0], '%b %d, %Y')
+		entryDate = utils.normalizeDateFormat(row[0], '%b %d, %Y')
 		#adding key-EntryDate ; value = percentChange
 		eurUsdHistoryMap[entryDate] = reformatPercentageValue(row[5])
 
