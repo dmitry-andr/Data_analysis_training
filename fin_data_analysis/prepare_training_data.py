@@ -10,10 +10,7 @@ TOP_DECISION_VAL = 0.0099
 
 
 
-def reformatPercentageValue(percentageValue):
-	formattedValue = percentageValue.replace("%","")
-	
-	return formattedValue
+
 
 	
 def mergeMapsByKey(mapsArray):
@@ -65,7 +62,7 @@ def writeDataToCSV(dataMap):
 		for value in values:
 			csvRow.append(value)
 		data.append(csvRow)
-	with open("data/ml_data_generated/resulting_data.csv", 'w', newline='') as f:
+	with open(utils.CSV_GENERATED_DATA_FOLDER + "/resulting_data.csv", 'w', newline='') as f:
 		writer = csv.writer(f)
 		writer.writerows(data)
 				
@@ -86,7 +83,7 @@ with open(DJ_HIST_DATA_CSV) as csvDataFile:
 	for row in csvReader:
 		entryDate = utils.normalizeDateFormat(row[0], '%b %d, %Y')
 		#adding key-EntryDate ; value = percentChange
-		djHistoryMap[entryDate] = reformatPercentageValue(row[6])
+		djHistoryMap[entryDate] = utils.reformatPercentageValue(row[6])
 
 
 
@@ -98,7 +95,7 @@ with open(ND_HIST_DATA_CSV) as csvDataFile:
 	for row in csvReader:
 		entryDate = utils.normalizeDateFormat(row[0], '%b %d, %Y')
 		#adding key-EntryDate ; value = percentChange
-		ndHistoryMap[entryDate] = reformatPercentageValue(row[6])
+		ndHistoryMap[entryDate] = utils.reformatPercentageValue(row[6])
 
 		
 		
@@ -111,7 +108,7 @@ with open(SP_HIST_DATA_CSV) as csvDataFile:
 	for row in csvReader:
 		entryDate = utils.normalizeDateFormat(row[0], '%b %d, %Y')
 		#adding key-EntryDate ; value = percentChange
-		spHistoryMap[entryDate] = reformatPercentageValue(row[6])
+		spHistoryMap[entryDate] = utils.reformatPercentageValue(row[6])
 
 		
 		
@@ -123,7 +120,7 @@ with open(GLD_FUTURES_HIST_DATA_CSV) as csvDataFile:
 	for row in csvReader:
 		entryDate = utils.normalizeDateFormat(row[0], '%b %d, %Y')
 		#adding key-EntryDate ; value = percentChange
-		gldFutHistoryMap[entryDate] = reformatPercentageValue(row[6])#Pay attention to index !!! different in different hist data sets
+		gldFutHistoryMap[entryDate] = utils.reformatPercentageValue(row[6])#Pay attention to index !!! different in different hist data sets
 
 
 
@@ -135,7 +132,7 @@ with open(EURUSD_HIST_DATA_CSV) as csvDataFile:
 	for row in csvReader:
 		entryDate = utils.normalizeDateFormat(row[0], '%b %d, %Y')
 		#adding key-EntryDate ; value = percentChange
-		eurUsdHistoryMap[entryDate] = reformatPercentageValue(row[5])
+		eurUsdHistoryMap[entryDate] = utils.reformatPercentageValue(row[5])
 
 		
 mergedData = mergeMapsByKey([djHistoryMap, ndHistoryMap, spHistoryMap, gldFutHistoryMap, eurUsdHistoryMap])
