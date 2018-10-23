@@ -5,8 +5,7 @@ import utils
 
 
 DATA_FILE_TIME_PERIOD_SUFFIX = "_jan_aug_2018"#"_jan_2017_aug_2018"
-LOW_DECISION_VAL = 0.0098
-TOP_DECISION_VAL = 0.0099
+
 
 
 
@@ -39,15 +38,7 @@ def addDecisionColumnToMergedData(mergedMap):
 	mapWithDecisions = {}
 	for key, value in mergedMap.items():
 		labelRawValue = value[len(value) - 1]
-		if(float(labelRawValue) < LOW_DECISION_VAL):
-			value.append("-1:No")
-			print("'-1:No' - Label : ", labelRawValue)
-		elif (float(labelRawValue) > TOP_DECISION_VAL):
-			value.append("1:Yes")
-			print("'1:Yes' - Label : ", labelRawValue)
-		else:
-			value.append("0:Risk")
-			print("'0:Risk' - Label : ", labelRawValue)
+		value.append(utils.getDecisionLabel(labelRawValue))
 		
 		mapWithDecisions[key] = value
 		

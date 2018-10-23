@@ -1,6 +1,5 @@
 import time
 import xlsxwriter
-import utils
 import os
 
 
@@ -13,6 +12,9 @@ from selenium.common.exceptions import NoSuchElementException
 from nltk import app
 from _tracemalloc import start
 
+#custom modules imports
+import utils
+
 
 
 
@@ -21,7 +23,7 @@ MSG_ELEMENT_NOT_FOUND = "ERR : Element not found"
 
 DATA_RECORD_INTERVAL_SEC = 10
 DATA_RECORD_ITERATIONS_MAX = 200
-DATA_RECORD_CSV_FILE = "indices_scrapping_data.csv"
+
 
 TABLE_COLUMN_NO = "No"
 TICKER_DATA_KEY_TICKER_NAME = "Ticker name"
@@ -143,7 +145,7 @@ def writeDataToCSV(dataRecordsArr):
         print(record)
         dataToWrite.append(record[TICKER_DATA_KEY_CHANGE_PERCENT])
 
-    CSV_FILE_PATH = utils.CSV_GENERATED_DATA_FOLDER + "/" + DATA_RECORD_CSV_FILE
+    CSV_FILE_PATH = utils.CSV_GENERATED_DATA_FOLDER + "/" + utils.DATA_RECORD_CSV_FILE
     with open(CSV_FILE_PATH, 'a') as datafile:
         print("dataToWrite", dataToWrite)
         txtData = ""

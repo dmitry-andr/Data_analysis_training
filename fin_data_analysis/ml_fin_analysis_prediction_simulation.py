@@ -12,7 +12,10 @@ from sklearn.neighbors import KNeighborsClassifier
 from sklearn.discriminant_analysis import LinearDiscriminantAnalysis
 from sklearn.naive_bayes import GaussianNB
 from sklearn.svm import SVC
+import os
 
+#custom modules imports
+import utils
 
 
 DISPLAY_PLOTS = False
@@ -219,13 +222,63 @@ print(classification_report(Y_validation, predictions))
 print("*********************************************************************")
 print("\nMy predictions")
 custom_input = [[4.4, 2.1, 5.5, 1.8]]
-# reshape as has only 1 entry
 predictions = knn.predict(custom_input)
 print(predictions)
 print(knn.predict_proba(custom_input))
 '''
 
 
+print("\n************************************************\nTest predictions on daily data\n************************************************\n")
+CSV_FILE_PATH = utils.CSV_GENERATED_DATA_FOLDER + "/" + utils.DATA_RECORD_CSV_FILE
+content = []
+with open(CSV_FILE_PATH) as f:
+	content = f.read().splitlines()
 
+entryData = []
+rowIndex = 0
+for dataRecord in content:
+	elemIndex = 0
+	entryDataRow = []
+	for element in dataRecord.split(","):
+		print(element)
+		entryDataRow.append(element)
+	entryData.append(entryDataRow)
+
+print(entryData)
+
+for entryRecord in entryData:
+	print("Data for experiment : ", entryRecord)
+	print("My predictions")
+	custom_input = [entryRecord[2:6]]
+	print("Input : ", custom_input)
+	print("Actual label : ", utils.getDecisionLabel(entryRecord[6]))
+	entryRecord.append(utils.getDecisionLabel(entryRecord[6]))
+	predictions = knn.predict(custom_input)
+	print(predictions)
+	print(knn.predict_proba(custom_input))
+	entryRecord.append(predictions[0])
+	entryRecord.append(str(knn.predict_proba(custom_input)[0][0]) + ";" + str(knn.predict_proba(custom_input)[0][1]))
+	
+print(entryData)
+
+CSV_FILE_PATH = utils.CSV_GENERATED_DATA_FOLDER + "/" + "ml_daily_analysys_genrated.csv"
+with open(CSV_FILE_PATH, 'a') as datafile:
+	for dataToWrite in entryData:
+		txtData = ""
+		for idx, val in enumerate(dataToWrite):
+			txtData += val
+			if (idx < (len(dataToWrite) - 1)):
+				 txtData += ","
+
+		
+		#If not beginning of the file, add new line cusrsor move
+		if os.stat(CSV_FILE_PATH).st_size != 0:
+			txtData = "\n" + txtData
+
+		print("txtData", txtData)
+		datafile.write(txtData)
+
+		
+		
 
 
